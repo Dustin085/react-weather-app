@@ -1,0 +1,117 @@
+@import './custom.scss';
+
+ul,
+li {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.root-wrap {
+    background: center / cover no-repeat;
+    // border-radius: 20px;
+}
+
+.app-wrap {
+    // border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+    // border-left: 1px solid rgba(255, 255, 255, 0.4);
+    border: 5px solid rgba(255, 255, 255, 0.4);
+    background: linear-gradient(to top right,
+            rgba(90, 149, 207, 0.5),
+            rgba(58, 76, 99, 0.8));
+    box-shadow: 10px -10px 20px rgba(0, 0, 0, 0.2),
+        -10px 10px 20px rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
+    border-radius: 20px;
+}
+
+.hero-title {
+    font-size: 5rem;
+}
+
+.weather-info {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.select-wrap {
+    display: flex;
+    position: relative;
+
+    .icon {
+        position: absolute;
+        height: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        left: 8px;
+    }
+
+    .form-select {
+        padding-left: 36px;
+    }
+}
+
+.weather-forecast-card {
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 auto;
+    display: flex;
+    gap: .75rem;
+    width: 100%;
+    max-width: 250px;
+
+    .card-body {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .weather-forecast {
+            color: rgba(255, 255, 255, 0.4);
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        // border-left: 1px solid rgba(255, 255, 255, 0.3);
+        padding-left: .5rem;
+        position: relative;
+
+        &::after {
+            content: "";
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            height: 80%;
+            width: 1px;
+        }
+    }
+}
+
+.weather-icon {
+    display: flex;
+    border-radius: 15%;
+    padding: 8px;
+    background-color: rgba(255, 255, 255, 0.1);
+    aspect-ratio: 1;
+    height: 48px;
+
+    img {
+        opacity: .6;
+        aspect-ratio: 1;
+        object-fit: contain;
+    }
+}
+
+.tab-content {
+    width: 100%;
+}
