@@ -1,9 +1,10 @@
 import { Col, Container, Form, Row, Tab, Tabs } from 'react-bootstrap'
 import rainyBgImage from './assets/images/weather/rainy001.jpg';
-import rainyIcon from './assets/images/weather-icon/rainy001.svg';
+// import rainyIcon from './assets/images/weather-icon/rainy001.svg';
 import pinThin from './assets/images/pin-thin.png';
 import './App.scss'
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getWeatherIconUrlBycode } from './services/weatherMappingService';
 
 // interface WeatherElement {
 //   ElementName: "最高溫度" | "最低溫度" | "天氣現象",
@@ -32,6 +33,16 @@ interface DayWeatherData {
   minTemperature: string,
 }
 
+// const WeatherCode = {
+//   clear: [1],
+//   mostlyClear: [2],
+//   partlyClear: [3],
+//   partlyCloudy: [4],
+//   rainy: [],
+//   rainyThunder: [],
+//   foggy: [],
+// }
+
 function App() {
   const API_KEY = import.meta.env.VITE_API_URL;
   const API_AUTH = import.meta.env.VITE_API_AUTH;
@@ -41,10 +52,8 @@ function App() {
   };
   const [weatherData, setWeatherData] = useState<DayWeatherData[] | null>(null);
   const [location, setLocation] = useState<string | null>(null);
-  const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    console.log(ev.target.options[ev.target.selectedIndex].innerText);
-    setLocation(ev.target.options[ev.target.selectedIndex].innerText);
-  };
+  const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => { setLocation(ev.target.value); };
+  const locationSelectRef = useRef<HTMLSelectElement>(null);
 
   // const DEMO_DAY_WEATHER_DATA: DayWeatherData = {
   //   date: new Date(),
@@ -54,13 +63,18 @@ function App() {
   //   minTemperature: '9',
   // }
 
+  // 初始化
+  useEffect(() => {
+    if (locationSelectRef.current) setLocation(locationSelectRef.current.value);
+  }, []);
+
   useEffect(() => {
     if (location) {
       console.log(`fetching ${location} weather data`);
       try {
         fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
           .then(res => {
-            console.log(res);
+            // console.log(res);
             return res.json();
           })
           .then(result => {
@@ -108,7 +122,8 @@ function App() {
       <div
         className="root-wrap vh-100"
         style={{
-          backgroundImage: `url(${rainyBgImage})`
+          backgroundImage: `url(${rainyBgImage})`,
+          borderRadius: '20px',
         }}
       >
         <Container
@@ -127,10 +142,10 @@ function App() {
                   </Dropdown.Toggle> */}
                 <div className="select-wrap my-3 mx-auto" style={{ width: '80%' }}>
                   <img src={pinThin} alt="" className="icon" />
-                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }}>
-                    <option value="">臺北市</option>
-                    <option value="">新北市</option>
-                    <option value="">高雄市</option>
+                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} defaultValue={"高雄市"}>
+                    <option value="臺北市">臺北市</option>
+                    <option value="新北市">新北市</option>
+                    <option value="高雄市">高雄市</option>
                   </Form.Select>
                 </div>
                 {/* </Dropdown> */}
@@ -143,7 +158,7 @@ function App() {
           </Row>
           <div className='divider'></div>
           <Row style={{ height: '67%' }}>
-            <Col className='col-12 p-3'>
+            <Col className='col-12 p-3 h-100'>
               <div className="weather-forecast-tabs-wrap h-100 d-flex flex-column align-items-center">
                 <h3 className='fw-bold mt-4 mb-3' style={{
                   letterSpacing: '.8rem',
@@ -189,7 +204,7 @@ function WeatherForecastCard({ data }: { data: DayWeatherData }) {
     <div className="weather-forecast-card">
       <div className="card-head">
         <picture className='weather-icon'>
-          <img src={rainyIcon} alt={'天氣代碼=' + data.weatherCode} />
+          <img src={getWeatherIconUrlBycode(Number(data.weatherCode))} alt={data.weatherCode} />
         </picture>
       </div>
       <div className="card-body">

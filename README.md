@@ -8,13 +8,16 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## TODO
-- [ ] 初始化邏輯
-- [ ] 實作氣象背景與卡片icon
-  - [ ] 整理所需圖片清單(利用天氣代碼，每個代碼至少一張圖)
-  - [ ] 蒐集圖片
-  - [ ] 寫邏輯依照天氣代碼套用圖片
+- [x] 初始化邏輯
+- [x] 實作氣象背景與卡片icon
+  - [x] 整理所需圖片清單(利用天氣代碼，每個代碼至少一張圖)
+  - [x] 蒐集圖片
+  - [x] 寫邏輯依照天氣代碼套用圖片
+  - [ ] 蒐集背景圖片
+  - [ ] 邏輯套用背景圖片
 - [ ] review fetch預報資料的程式碼
 - [ ] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
+ - [ ] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
 - [ ] params query用來做初始化邏輯的參數?
 - [ ] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
  - [ ] 存入local並記錄時間?
@@ -24,8 +27,10 @@ Currently, two official plugins are available:
 ### [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
 目前使用了以下項目：
 - 臺灣各鄉鎮市區預報資料-臺灣各鄉鎮市區未來1週天氣預報: **F-D0047-091**
-- 現在天氣觀測報告-有人氣象站資料: **O-A0003-001**  
+- 現在天氣觀測報告-有人氣象站資料(配合下方清單內的有人氣象站站號(名)使用): **O-A0003-001**
 ### [氣象代碼](https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf)
+### [氣象站清單](https://e-service.cwa.gov.tw/wdps/obs/state.htm#description)
+### [Icons](https://fonts.google.com/icons?icon.query=weather&icon.size=24&icon.color=%23e8eaed)
 
 ## Expanding the ESLint configuration
 
