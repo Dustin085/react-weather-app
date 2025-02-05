@@ -16,6 +16,9 @@ Currently, two official plugins are available:
 - [ ] review fetch預報資料的程式碼
 - [ ] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
 - [ ] params query用來做初始化邏輯的參數?
+- [ ] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
+ - [ ] 存入local並記錄時間?
+ - [ ] 時間過期才重新fetch
 
 ## 氣象代碼
 https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf
