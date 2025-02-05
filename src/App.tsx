@@ -37,7 +37,8 @@ function App() {
   const API_AUTH = import.meta.env.VITE_API_AUTH;
   const API_ROUTE = {
     oneWeekPerTwelveHrs: 'F-D0047-091',
-  }
+    weatherObservation: 'O-A0003-001',
+  };
   const [weatherData, setWeatherData] = useState<DayWeatherData[] | null>(null);
   const [location, setLocation] = useState<string | null>(null);
   const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
