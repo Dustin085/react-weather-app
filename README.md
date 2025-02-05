@@ -21,11 +21,11 @@ Currently, two official plugins are available:
  - [ ] 時間過期才重新fetch
 
 ## 常用連結
-[API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
+- [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
 目前使用了以下項目：
 - 臺灣各鄉鎮市區預報資料-臺灣各鄉鎮市區未來1週天氣預報: **F-D0047-091**
 - 現在天氣觀測報告-有人氣象站資料: **O-A0003-001**
-[氣象代碼](https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf)
+- [氣象代碼](https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf)
 
 ## Expanding the ESLint configuration
 
