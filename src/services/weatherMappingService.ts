@@ -1,10 +1,20 @@
+import errorImg from '../assets/images/broken-image.svg';
+// icon import
 import rainyIcon from '../assets/images/weather-icon/rainy001.svg';
 import clearIcon from '../assets/images/weather-icon/clear001.svg';
 import cloudyIcon from '../assets/images/weather-icon/cloudy001.svg';
 import thunderStormIcon from '../assets/images/weather-icon/thunder-storm001.svg';
 import fogIcon from '../assets/images/weather-icon/foggy001.svg';
 import snowIcon from '../assets/images/weather-icon/snowy001.svg';
-import errorImg from '../assets/images/broken-image.svg'
+// background import
+import clearBg001 from '../assets/images/weather/clear001.jpg';
+import clearBg002 from '../assets/images/weather/clear002.jpg';
+import rainyBg001 from '../assets/images/weather/rainy001.jpg';
+import rainyBg002 from '../assets/images/weather/rainy002.jpg';
+import cloudyBg001 from '../assets/images/weather/cloudy001.jpg';
+import thunderBg001 from '../assets/images/weather/thunder001.jpg';
+import fogBg001 from '../assets/images/weather/fog001.jpg';
+import snowBg001 from '../assets/images/weather/snow.jpg';
 
 export enum WeatherType {
     notFound = 0,
@@ -58,15 +68,35 @@ export const typeToWeatherIconUrl = new Map<WeatherType, string>([
     [WeatherType.localRain, rainyIcon],
 ]);
 
+const typeToWeatherBgUrl = new Map<WeatherType, string[]>([
+    [WeatherType.notFound, [errorImg]],
+    [WeatherType.clear, [clearBg001, clearBg002]],
+    [WeatherType.mostlyClear, [clearBg001, clearBg002]],
+    [WeatherType.partlyClear, [clearBg001, clearBg002]],
+    [WeatherType.partlyCloudy, [cloudyBg001]],
+    [WeatherType.cloudy, [cloudyBg001]],
+    [WeatherType.occasionalRainy, [rainyBg001, rainyBg002]],
+    [WeatherType.rainy, [rainyBg001, rainyBg002]],
+    [WeatherType.thunderShower, [thunderBg001]],
+    [WeatherType.thunderStorm, [thunderBg001]],
+    [WeatherType.snow, [snowBg001]],
+    [WeatherType.fog, [fogBg001]],
+    [WeatherType.localRain, [rainyBg001, rainyBg002]],
+]);
+
 export function getWeatherIconUrlBycode(code: number): string {
     return typeToWeatherIconUrl.get(codeToWeatherType.get(code) ?? WeatherType.notFound) ?? errorImg;
-    // const weatherType = codeToWeatherType.get(code);
-    // if (weatherType) {
-    //     const iconUrl = typeToWeatherIconUrl.get(weatherType);
-    //     if (iconUrl) return iconUrl;
-    // };
+}
 
-    // return 'icon error url';
+export function getWeatherBgUrlByCode(code: number): string {
+    const url = typeToWeatherBgUrl.get(codeToWeatherType.get(code) ?? WeatherType.notFound) ?? errorImg;
+    if (url instanceof Array) {
+        const randomNum = Math.floor(Math.random() * url.length);
+        console.log('get bg image url');
+        return url[randomNum];
+    } else {
+        return url;
+    }
 }
 
 // export function getWeatherTypeByCode(code: number): WeatherType | undefined {
