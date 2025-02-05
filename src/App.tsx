@@ -158,7 +158,7 @@ function App() {
                     width: '80%'
                   }}
                 >
-                  <Tab eventKey="5days" title="5日">
+                  <Tab eventKey="5days" title="7日">
                     <ul className='d-flex flex-column gap-2'>
                       {
                         weatherData && weatherData.map(dayData => <li key={dayData.date.getDate()}><WeatherForecastCard data={dayData} /></li>)

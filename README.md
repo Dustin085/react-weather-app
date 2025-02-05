@@ -8,11 +8,14 @@ Currently, two official plugins are available:
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## TODO
+- [ ] 初始化邏輯
 - [ ] 實作氣象背景與卡片icon
   - [ ] 整理所需圖片清單(利用天氣代碼，每個代碼至少一張圖)
   - [ ] 蒐集圖片
   - [ ] 寫邏輯依照天氣代碼套用圖片
 - [ ] review fetch預報資料的程式碼
+- [ ] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
+- [ ] params query用來做初始化邏輯的參數?
 
 ## 氣象代碼
 https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf
