@@ -12,6 +12,8 @@ import clearBg002 from '../assets/images/weather/clear002.jpg';
 import rainyBg001 from '../assets/images/weather/rainy001.jpg';
 import rainyBg002 from '../assets/images/weather/rainy002.jpg';
 import cloudyBg001 from '../assets/images/weather/cloudy001.jpg';
+import cloudyBg002 from '../assets/images/weather/cloudy002.jpg';
+import cloudyBg003 from '../assets/images/weather/cloudy003.jpg';
 import thunderBg001 from '../assets/images/weather/thunder001.jpg';
 import fogBg001 from '../assets/images/weather/fog001.jpg';
 import snowBg001 from '../assets/images/weather/snow.jpg';
@@ -32,6 +34,7 @@ export enum WeatherType {
     localRain,
 }
 
+// 可參照氣象代碼 https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf
 const WeatherCode = new Map<WeatherType, number[]>([
     [WeatherType.clear, [1]],
     [WeatherType.mostlyClear, [2]],
@@ -73,8 +76,8 @@ const typeToWeatherBgUrl = new Map<WeatherType, string[]>([
     [WeatherType.clear, [clearBg001, clearBg002]],
     [WeatherType.mostlyClear, [clearBg001, clearBg002]],
     [WeatherType.partlyClear, [clearBg001, clearBg002]],
-    [WeatherType.partlyCloudy, [cloudyBg001]],
-    [WeatherType.cloudy, [cloudyBg001]],
+    [WeatherType.partlyCloudy, [cloudyBg001, cloudyBg002, cloudyBg003]],
+    [WeatherType.cloudy, [cloudyBg001, cloudyBg002, cloudyBg003]],
     [WeatherType.occasionalRainy, [rainyBg001, rainyBg002]],
     [WeatherType.rainy, [rainyBg001, rainyBg002]],
     [WeatherType.thunderShower, [thunderBg001]],
