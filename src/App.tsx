@@ -1,6 +1,4 @@
 import { Col, Container, Form, Row, Tab, Tabs } from 'react-bootstrap'
-// import rainyBgImage from './assets/images/weather/rainy001.jpg';
-// import rainyIcon from './assets/images/weather-icon/rainy001.svg';
 import pinThin from './assets/images/pin-thin.png';
 import defaultBg from './assets/images/default-bg001.webp'
 import './App.scss'
@@ -56,39 +54,34 @@ function App() {
       console.log(`fetching ${location} weather data`);
       try {
         fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
-          .then(res => {
-            // console.log(res);
-            return res.json();
-          })
+          .then(res => res.json())
           .then(result => {
-            if (result.success) {
-              const data = result.records.Locations[0].Location[0].WeatherElement as WeatherElement<"最高溫度" | "最低溫度" | "天氣現象">[];
-              // 取得預報的日期，已知日期會有序排列，末段的filter是為了刪除重複元素
-              const dates = data[0].Time.map(ele => new Date(ele.StartTime).getDate()).filter((value, index, arr) => arr[index + 1] != value);
-              // const dayNoDup = dates.filter((value, index, arr) => arr[index + 1] != value);
-              // console.log(dates);
-              const dayWeatherData: DayWeatherData[] = dates.map((date) => {
-                const weatherData = data.find(ele => ele.ElementName === '天氣現象') as WeatherElement<"天氣現象">;
-                const weatherThisDay = weatherData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].Weather;
-                const weatherCode = weatherData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].WeatherCode;
-                const maxTData = data.find(ele => ele.ElementName === '最高溫度') as WeatherElement<"最高溫度">;
-                const maxT = maxTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MaxTemperature)) / arr.length) + acc, 0);
-                const minTData = data.find(ele => ele.ElementName === '最低溫度') as WeatherElement<"最低溫度">;
-                const minT = minTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MinTemperature)) / arr.length) + acc, 0);
-                // ?.Time.find(time => new Date(time.StartTime).getDate() === date)
-                return {
-                  date: new Date(data[0].Time.find(time => { return new Date(time.StartTime).getDate() === date })?.StartTime as string),
-                  weather: weatherThisDay ? weatherThisDay : '無法取得天氣資料',
-                  weatherCode: weatherCode ? weatherCode : '無法取得天氣代碼',
-                  maxTemperature: maxT.toString(),
-                  minTemperature: minT.toString(),
-                }
-              });
-              // console.log(dayWeatherData);
-              setWeatherData(dayWeatherData);
-            } else {
-              throw Error('成功取得預報資料，但預報資料被標註為未完成');
-            }
+            if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
+            const data = result.records.Locations[0].Location[0].WeatherElement as WeatherElement<"最高溫度" | "最低溫度" | "天氣現象">[];
+            // 取得預報的日期，已知日期會有序排列，末段的filter是為了刪除重複元素
+            const dates = data[0].Time.map(ele => new Date(ele.StartTime).getDate()).filter((value, index, arr) => arr[index + 1] != value);
+            // const dayNoDup = dates.filter((value, index, arr) => arr[index + 1] != value);
+            // console.log(dates);
+            const dayWeatherData: DayWeatherData[] = dates.map((date) => {
+              const weatherData = data.find(ele => ele.ElementName === '天氣現象') as WeatherElement<"天氣現象">;
+              const weatherThisDay = weatherData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].Weather;
+              const weatherCode = weatherData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].WeatherCode;
+              const maxTData = data.find(ele => ele.ElementName === '最高溫度') as WeatherElement<"最高溫度">;
+              const maxT = maxTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MaxTemperature)) / arr.length) + acc, 0);
+              const minTData = data.find(ele => ele.ElementName === '最低溫度') as WeatherElement<"最低溫度">;
+              const minT = minTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MinTemperature)) / arr.length) + acc, 0);
+              // ?.Time.find(time => new Date(time.StartTime).getDate() === date)
+              return {
+                date: new Date(data[0].Time.find(time => { return new Date(time.StartTime).getDate() === date })?.StartTime as string),
+                weather: weatherThisDay ? weatherThisDay : '無法取得天氣資料',
+                weatherCode: weatherCode ? weatherCode : '無法取得天氣代碼',
+                maxTemperature: maxT.toString(),
+                minTemperature: minT.toString(),
+              }
+            });
+            // console.log(dayWeatherData);
+            setWeatherData(dayWeatherData);
+
           });
       } catch (error) {
         console.log(error);
@@ -127,7 +120,7 @@ function App() {
                 <div className="select-wrap my-3 mx-auto" style={{ width: '80%' }}>
                   <img src={pinThin} alt="" className="icon" />
                   <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} defaultValue={"高雄市"}>
-                    {countryNames.map(cuntry => <option value={cuntry}>{cuntry}</option>)}
+                    {countryNames.map(cuntry => <option key={cuntry} value={cuntry}>{cuntry}</option>)}
                     {/* <option value="臺北市">臺北市</option>
                     <option value="新北市">新北市</option>
                     <option value="高雄市">高雄市</option> */}

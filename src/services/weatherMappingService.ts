@@ -47,12 +47,12 @@ const WeatherCode = new Map<WeatherType, number[]>([
     [WeatherType.localRain, [29, 30, 31, 32]],
 ]);
 
-export const codeToWeatherType = new Map<number, WeatherType>();
+const codeToWeatherType = new Map<number, WeatherType>();
 WeatherCode.forEach((codes, weatherType) => {
     codes.forEach((code) => codeToWeatherType.set(code, weatherType));
 });
 
-export const typeToWeatherIconUrl = new Map<WeatherType, string>([
+const typeToWeatherIconUrl = new Map<WeatherType, string>([
     [WeatherType.notFound, errorImg],
     [WeatherType.clear, clearIcon],
     [WeatherType.mostlyClear, clearIcon],
@@ -91,17 +91,8 @@ export function getWeatherIconUrlBycode(code: number): string {
 export function getWeatherBgUrlByCode(code: number): string {
     const url = typeToWeatherBgUrl.get(codeToWeatherType.get(code) ?? WeatherType.notFound) ?? errorImg;
     if (url instanceof Array) {
-        const randomNum = Math.floor(Math.random() * url.length);
-        console.log('get bg image url');
-        return url[randomNum];
+        return url[Math.floor(Math.random() * url.length)];
     } else {
         return url;
     }
 }
-
-// export function getWeatherTypeByCode(code: number): WeatherType | undefined {
-//     for (const [key, value] of WeatherCode) {
-//         if (value.includes(code)) return key;
-//     }
-//     return undefined;
-// }
