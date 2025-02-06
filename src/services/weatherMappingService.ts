@@ -92,10 +92,14 @@ export function getWeatherIconUrlBycode(code: number): string {
 }
 
 export function getWeatherBgUrlByCode(code: number): string {
-    const url = typeToWeatherBgUrl.get(codeToWeatherType.get(code) ?? WeatherType.notFound) ?? errorImg;
-    if (url instanceof Array) {
-        return url[Math.floor(Math.random() * url.length)];
-    } else {
-        return url;
-    }
+    const url = typeToWeatherBgUrl.get(codeToWeatherType.get(code) ?? WeatherType.notFound) ?? [errorImg];
+    return url[Math.floor(Math.random() * url.length)];
 }
+
+// const DEMO_DAY_WEATHER_DATA: DayWeatherData = {
+//   date: new Date(),
+//   weather: '大雨',
+//   weatherCode: '11',
+//   maxTemperature: '16',
+//   minTemperature: '9',
+// }

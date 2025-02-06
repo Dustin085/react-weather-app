@@ -33,22 +33,29 @@ function App() {
   };
   const [weatherData, setWeatherData] = useState<DayWeatherData[] | null>(null);
   const [location, setLocation] = useState<string | null>(null);
+  const [bgUrl, setBgUrl] = useState(defaultBg);
   const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => { setLocation(ev.target.value); };
   const locationSelectRef = useRef<HTMLSelectElement>(null);
-
-  // const DEMO_DAY_WEATHER_DATA: DayWeatherData = {
-  //   date: new Date(),
-  //   weather: '大雨',
-  //   weatherCode: '11',
-  //   maxTemperature: '16',
-  //   minTemperature: '9',
-  // }
 
   // 初始化
   useEffect(() => {
     if (locationSelectRef.current) setLocation(locationSelectRef.current.value);
+    const preLoadImg = new Image();
+    preLoadImg.src = defaultBg;
   }, []);
 
+  // 設定背景圖片，包含預載圖片
+  useEffect(() => {
+    if (!weatherData) return;
+    const preLoadImg = new Image();
+    const newBgUrl = getWeatherBgUrlByCode(Number(weatherData[0].weatherCode));
+    preLoadImg.src = newBgUrl;
+    preLoadImg.onload = () => {
+      setBgUrl(newBgUrl);
+    };
+  }, [weatherData]);
+
+  // fetch氣象資料
   useEffect(() => {
     if (location) {
       console.log(`fetching ${location} weather data`);
@@ -72,7 +79,7 @@ function App() {
 
               const minTData = data.find(ele => ele.ElementName === '最低溫度') as WeatherElement<"最低溫度">;
               const minT = minTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MinTemperature)) / arr.length) + acc, 0);
-              
+
               return {
                 date: new Date(data[0].Time.find(time => { return new Date(time.StartTime).getDate() === date })?.StartTime as string),
                 weather: weatherThisDay ?? '無法取得天氣資料',
@@ -100,7 +107,7 @@ function App() {
       <div
         className="root-wrap vh-100"
         style={{
-          backgroundImage: `url(${weatherData ? getWeatherBgUrlByCode(Number(weatherData[0].weatherCode)) : defaultBg})`,
+          backgroundImage: `url(${bgUrl})`,
           borderRadius: '20px',
           transition: '.5s',
         }}
