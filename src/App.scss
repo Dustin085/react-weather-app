@@ -9,6 +9,9 @@ li {
 
 .root-wrap {
     background: center / cover no-repeat;
+    // 暫時將寬度限縮在手機板
+    max-width: 500px;
+    margin: 0 auto;
     // border-radius: 20px;
 }
 
@@ -115,4 +118,12 @@ li {
 .tab-content {
     width: 100%;
     overflow: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: safe center;
+
+    .tab-pane {
+        height: 100%;
+    }
 }

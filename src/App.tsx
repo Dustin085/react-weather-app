@@ -162,12 +162,10 @@ function App() {
                   }}
                 >
                   <Tab eventKey="5days" title="7日">
-                    <ul className='d-flex flex-column gap-2'>
+                    <ul className='d-flex flex-column gap-2 justify-content-evenly h-100'>
                       {
                         weatherData && weatherData.map(dayData => <li key={dayData.date.getDate()}><WeatherForecastCard data={dayData} /></li>)
                       }
-                      {/* <li><WeatherForecastCard data={DEMO_DAY_WEATHER_DATA} /></li>
-                      <li><WeatherForecastCard data={DEMO_DAY_WEATHER_DATA} /></li> */}
                     </ul>
                   </Tab>
                   <Tab eventKey="14days" title="14日">
