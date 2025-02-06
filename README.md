@@ -16,16 +16,16 @@ Currently, two official plugins are available:
   - [x] 蒐集背景圖片
   - [x] 邏輯套用背景圖片
 - [x] review fetch預報資料的程式碼
- - [x] review結果：可以改寫成先將data裡面三個array合併在一起然後再進行處理，但前提是必須保證三個array的Time是一樣的，推測，可以稍微提升效率，但目前優先度低
+  - [x] review結果：可以改寫成先將data裡面三個array合併在一起然後再進行處理，但前提是必須保證三個array的Time是一樣的，推測，可以稍微提升效率，但目前優先度低
 - [x] 解決背景圖片載入過慢
- - [ ] 設計背景圖片的transition，backgroundImage沒辦法直接套用transition，需要設計一個轉場
+  - [ ] 設計背景圖片的transition，backgroundImage沒辦法直接套用transition，需要設計一個轉場
 - [ ] 將桌面板也限制在手機大小
 - [ ] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
- - [ ] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
+  - [ ] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
 - [ ] params query用來做初始化邏輯的參數?
 - [ ] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
- - [ ] 存入local並記錄時間?
- - [ ] 時間過期才重新fetch
+  - [ ] 存入local並記錄時間?
+  - [ ] 時間過期才重新fetch
 
 ## 常用連結
 ### [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
