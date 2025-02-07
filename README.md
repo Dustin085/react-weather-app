@@ -1,11 +1,9 @@
-# React + TypeScript + Vite
+# React Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+使用react + vite作為基礎架構，
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+利用中央氣象局提供的api獲取全台各地的氣象資料並且呈現。
+隨當下天氣改變的背景圖片讓人對於今日陰晴一目了然。
 
 ## TODO
 - [x] 初始化邏輯
@@ -27,6 +25,7 @@ Currently, two official plugins are available:
 - [x] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
   - [x] 存入localStorage並記錄時間(expireTime)
   - [x] 時間過期才重新fetch
+- [ ] 考慮設計地區選擇排序邏輯
 
 ## 常用連結
 ### [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
@@ -36,6 +35,15 @@ Currently, two official plugins are available:
 ### [氣象代碼](https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf)
 ### [氣象站清單](https://e-service.cwa.gov.tw/wdps/obs/state.htm#description)
 ### [Icons](https://fonts.google.com/icons?icon.query=weather&icon.size=24&icon.color=%23e8eaed)
+
+## React + TypeScript + Vite
+
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+
+Currently, two official plugins are available:
+
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
 ## Expanding the ESLint configuration
 
