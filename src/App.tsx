@@ -4,7 +4,7 @@ import defaultBg from './assets/images/default-bg001.webp'
 import './App.scss'
 import { useEffect, useRef, useState } from 'react';
 import { getWeatherBgUrlByCode, getWeatherIconUrlBycode } from './services/weatherMappingService';
-import { countryNames } from './constants/countryNames';
+import { countryNamesChinese as countryNames } from './constants/countryNames';
 
 interface WeatherElement<ElementName extends "最高溫度" | "最低溫度" | "天氣現象"> {
   ElementName: ElementName,
