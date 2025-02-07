@@ -4,7 +4,7 @@ import defaultBg from './assets/images/default-bg001.webp'
 import './App.scss'
 import { useEffect, useRef, useState } from 'react';
 import { getWeatherBgUrlByCode, getWeatherIconUrlBycode } from './services/weatherMappingService';
-import { countryNamesChinese as countryNames } from './constants/countryNames';
+import { countryNamesChinese as countryNames, countryNameToObservationStationId, reverseCountryNameMapChinese } from './constants/countryNames';
 
 interface WeatherElement<ElementName extends "最高溫度" | "最低溫度" | "天氣現象"> {
   ElementName: ElementName,
@@ -24,17 +24,63 @@ interface DayWeatherData {
   minTemperature: string,
 }
 
+interface WeatherObservationData {
+  GeoInfo: Record<string, unknown>,
+  ObsTime: {
+    DateTime: string, // "ex. 2021-10-06T14:00:00+08:00"
+  },
+  StationId: string,
+  StationName: string,
+  WeatherElement: {
+    AirPressure: number,
+    AirTemperature: number,
+    DailyExtreme: {
+      DailyHigh: {
+        AirTemperature: number,
+        Occurred_at: {
+          DateTime: string,
+        }
+      },
+      DailyLow: {
+        AirTemperature: number,
+        Occurred_at: {
+          DateTime: string,
+        }
+      }
+    },
+    RelativeHumidity: number,
+    SunshineDuration: number,
+    UVIndex: number,
+    Weather: string,
+    WindDirection: number,
+    WindSpeed: number,
+  }
+}
+
 function App() {
+  // API相關設定
   const API_KEY = import.meta.env.VITE_API_URL;
   const API_AUTH = import.meta.env.VITE_API_AUTH;
   const API_ROUTE = {
     oneWeekPerTwelveHrs: 'F-D0047-091',
     weatherObservation: 'O-A0003-001',
   };
-  const [sevenDaysForecastData, setSevenDaysForecastData] = useState<DayWeatherData[] | null>(null);
+
+  // 使用者選擇的地點，依此取得氣象資料
   const [location, setLocation] = useState<string | null>(null);
+
+  // 七日天氣預報資料
+  const [sevenDaysForecastData, setSevenDaysForecastData] = useState<DayWeatherData[] | null>(null);
+  // 當前地點天氣觀測資料
+  const [weatherObservationData, setWeatherObservationData] = useState<WeatherObservationData | null>(null);
+
+  // 背景圖片URL
   const [bgUrl, setBgUrl] = useState(defaultBg);
+
+  // 使用者選擇地點時的事件處理
   const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => { setLocation(ev.target.value); };
+
+  // 地點選擇的ref，初始化使用
   const locationSelectRef = useRef<HTMLSelectElement>(null);
 
   // 初始化
@@ -73,76 +119,127 @@ function App() {
   useEffect(() => {
     if (!location) { return };
 
-    // 檢查localstorage是否有資料，且是否過期
-    const localData = localStorage.getItem(`${location}sevenDaysForecastData`);
-    if (localData) {
-      try {
-        const localDataJson = JSON.parse(localData) as { dayWeatherData: DayWeatherData[], expireTime: string };
-        if (localDataJson.dayWeatherData.length > 0 && localDataJson.expireTime) {
-          if (new Date(localDataJson.expireTime).getTime() > new Date().getTime()) {
-            console.log('local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
-            setSevenDaysForecastData(localDataJson.dayWeatherData.map((ele) => {
-              return { ...ele, date: new Date(ele.date) };
-            }));
-            return;
+    // 取得兩種天氣資料
+    fetchSevenDaysForecastData(location);
+    fetchWeatherObservationData(location);
+
+    // 取得當前地點的天氣觀測資料，local或API
+    function fetchWeatherObservationData(location: string) {
+      // 檢查localstorage是否有資料，且是否過期
+      const localWeatherObservationData = localStorage.getItem(`${reverseCountryNameMapChinese[location]}_weatherObservationData`);
+      if (localWeatherObservationData) {
+        try {
+          const localDataJson = JSON.parse(localWeatherObservationData) as { weatherObservationData: WeatherObservationData, expireTime: string };
+          if (localDataJson.weatherObservationData && localDataJson.expireTime) {
+            if (new Date(localDataJson.expireTime).getTime() > new Date().getTime()) {
+              console.log('WeatherObservationData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
+              setWeatherObservationData(localDataJson.weatherObservationData);
+              return;
+            }
           }
+        } catch (error) {
+          console.log(error);
         }
+      }
+      // 使用氣象局api取得當前地點的天氣觀測資料
+      console.log(`fetching ${location} today weather observation data`);
+      try {
+        fetch(API_KEY + API_ROUTE.weatherObservation + '?' + 'Authorization=' + API_AUTH + '&StationId=' + countryNameToObservationStationId[reverseCountryNameMapChinese[location]])
+          .then(res => res.json())
+          .then(result => {
+            if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
+            const data = result.records.Station[0] as WeatherObservationData;
+            console.log(data);
+            setWeatherObservationData(data);
+
+            const numOfPreserveHours = 3;
+            const HOUR_TO_MILLISECOND = 3600000;
+            localStorage.setItem(`${reverseCountryNameMapChinese[location]}_weatherObservationData`, JSON.stringify({ weatherObservationData: data, expireTime: new Date(Date.now() + numOfPreserveHours * HOUR_TO_MILLISECOND).toISOString() }));
+          });
+
       } catch (error) {
         console.log(error);
       }
-    };
-
-    // 使用氣象局api取得七日天氣預報
-    console.log(`fetching ${location} weather data`);
-    try {
-      fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
-        .then(res => res.json())
-        .then(result => {
-          if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
-          const data = result.records.Locations[0].Location[0].WeatherElement as WeatherElement<"最高溫度" | "最低溫度" | "天氣現象">[];
-          // 取得預報的日期，已知日期會有序排列，末段的filter是為了刪除重複元素
-          const dates = data[0].Time.map(ele => new Date(ele.StartTime).getDate()).filter((value, index, arr) => arr[index + 1] != value);
-
-          const dayWeatherData: DayWeatherData[] = dates.map((date) => {
-            const sevenDaysForecastData = data.find(ele => ele.ElementName === '天氣現象') as WeatherElement<"天氣現象">;
-            const weatherThisDay = sevenDaysForecastData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].Weather;
-
-            const weatherCode = sevenDaysForecastData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].WeatherCode;
-
-            const maxTData = data.find(ele => ele.ElementName === '最高溫度') as WeatherElement<"最高溫度">;
-            const maxT = maxTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MaxTemperature)) / arr.length) + acc, 0);
-
-            const minTData = data.find(ele => ele.ElementName === '最低溫度') as WeatherElement<"最低溫度">;
-            const minT = minTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MinTemperature)) / arr.length) + acc, 0);
-
-            return {
-              date: new Date(data[0].Time.find(time => { return new Date(time.StartTime).getDate() === date })?.StartTime as string),
-              weather: weatherThisDay ?? '無法取得天氣資料',
-              weatherCode: weatherCode ?? '無法取得天氣代碼',
-              maxTemperature: maxT.toString(),
-              minTemperature: minT.toString(),
-            }
-          });
-
-          setSevenDaysForecastData(dayWeatherData);
-
-          // 儲存至localStorage
-          const localDayWeatherData = {
-            dayWeatherData: dayWeatherData,
-            expireTime: data[0].Time[0].EndTime,
-          };
-          localStorage.setItem(`${location}sevenDaysForecastData`, JSON.stringify(localDayWeatherData));
-
-        });
-    } catch (error) {
-      console.log(error);
     }
 
-  }, [API_AUTH, API_KEY, API_ROUTE.oneWeekPerTwelveHrs, location]);
+    // 取得七日天氣預報資料，local或API
+    function fetchSevenDaysForecastData(location: string) {
+      // 檢查localstorage是否有資料，且是否過期
+      const localSevenDaysForecastData = localStorage.getItem(`${location}sevenDaysForecastData`);
+      if (localSevenDaysForecastData) {
+        try {
+          const localDataJson = JSON.parse(localSevenDaysForecastData) as { dayWeatherData: DayWeatherData[], expireTime: string };
+          if (localDataJson.dayWeatherData.length > 0 && localDataJson.expireTime) {
+            if (new Date(localDataJson.expireTime).getTime() > new Date().getTime()) {
+              console.log('sevenDaysForecastData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
+              setSevenDaysForecastData(localDataJson.dayWeatherData.map((ele) => {
+                return { ...ele, date: new Date(ele.date) };
+              }));
+              return;
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
+      // 使用氣象局api取得七日天氣預報
+      console.log(`fetching ${location} 7 days forecast data`);
+      try {
+        fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
+          .then(res => res.json())
+          .then(result => {
+            if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
+            const data = result.records.Locations[0].Location[0].WeatherElement as WeatherElement<"最高溫度" | "最低溫度" | "天氣現象">[];
+            // 取得預報的日期，已知日期會有序排列，末段的filter是為了刪除重複元素
+            const dates = data[0].Time.map(ele => new Date(ele.StartTime).getDate()).filter((value, index, arr) => arr[index + 1] != value);
+
+            const dayWeatherData: DayWeatherData[] = dates.map((date) => {
+              const sevenDaysForecastData = data.find(ele => ele.ElementName === '天氣現象') as WeatherElement<"天氣現象">;
+              const weatherThisDay = sevenDaysForecastData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].Weather;
+
+              const weatherCode = sevenDaysForecastData.Time.find(time => new Date(time.StartTime).getDate() === date)?.ElementValue[0].WeatherCode;
+
+              const maxTData = data.find(ele => ele.ElementName === '最高溫度') as WeatherElement<"最高溫度">;
+              const maxT = maxTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MaxTemperature)) / arr.length) + acc, 0);
+
+              const minTData = data.find(ele => ele.ElementName === '最低溫度') as WeatherElement<"最低溫度">;
+              const minT = minTData.Time.filter(time => new Date(time.StartTime).getDate() === date).reduce((acc, cur, _index, arr) => Math.floor((Number(cur.ElementValue[0].MinTemperature)) / arr.length) + acc, 0);
+
+              return {
+                date: new Date(data[0].Time.find(time => { return new Date(time.StartTime).getDate() === date })?.StartTime as string),
+                weather: weatherThisDay ?? '無法取得天氣資料',
+                weatherCode: weatherCode ?? '無法取得天氣代碼',
+                maxTemperature: maxT.toString(),
+                minTemperature: minT.toString(),
+              }
+            });
+
+            setSevenDaysForecastData(dayWeatherData);
+
+            // 儲存至localStorage
+            const localDayWeatherData = {
+              dayWeatherData: dayWeatherData,
+              expireTime: data[0].Time[0].EndTime,
+            };
+            localStorage.setItem(`${location}sevenDaysForecastData`, JSON.stringify(localDayWeatherData));
+
+          });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+
+  }, [API_AUTH, API_KEY, API_ROUTE.oneWeekPerTwelveHrs, API_ROUTE.weatherObservation, location]);
 
   useEffect(() => {
-    console.log('weather data:', sevenDaysForecastData);
+    console.log('7 days forecast data:', sevenDaysForecastData);
   }, [sevenDaysForecastData]);
+
+  useEffect(() => {
+    console.log('weather observation data:', weatherObservationData);
+  }, [weatherObservationData]);
 
   return (
     <>
@@ -199,8 +296,8 @@ function App() {
                       }
                     </ul>
                   </Tab>
-                  <Tab eventKey="14days" title="今日綜合">
-                    製作中...
+                  <Tab eventKey="weatherObservation" title="今日綜合">
+                    {weatherObservationData && <div>{'觀測自: ' + weatherObservationData.StationName + '站'}</div>}
                   </Tab>
                 </Tabs>
               </div>

@@ -19,8 +19,12 @@
   - [ ] 設計背景圖片的transition，backgroundImage沒辦法直接套用transition，需要設計一個轉場
 - [x] 將桌面板也限制在手機大小
 - [x] 修正高度過高時tab content位置問題，justify-content: safe center好用
-- [ ] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
-  - [ ] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
+- [x] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
+  - [x] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
+  - [x] 重寫countryNames.ts的邏輯以讓氣象觀測站站號可以被查找
+- [ ] 當天綜合天氣觀測報告
+  - [x] 取得當天綜合天氣觀測
+  - [ ] 呈現資料
 - [ ] params query用來做初始化邏輯的參數?
 - [x] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
   - [x] 存入localStorage並記錄時間(expireTime)

@@ -82,7 +82,7 @@ export const reverseCountryNameMapChinese = Object.entries(countryNameMapChinese
     return acc;
 }, {} as Record<string, keyof typeof countryNameMapChinese>);
 
-console.log(reverseCountryNameMapChinese['高雄市']);
+// console.log(reverseCountryNameMapChinese['高雄市']);
 
 // 各縣市的氣象觀測站代號，代號清單在README.md
 export const countryNameToObservationStationId = {
@@ -110,7 +110,7 @@ export const countryNameToObservationStationId = {
     [CountryNamesEnum.Lienchiang_County]: '467990',
 };
 
-console.log(`高雄市觀測站的站號是: ${countryNameToObservationStationId[reverseCountryNameMapChinese['高雄市']]}`);
+// console.log(`高雄市觀測站的站號是: ${countryNameToObservationStationId[reverseCountryNameMapChinese['高雄市']]}`);
 
 // console.log(countryNamesChinese);
 
