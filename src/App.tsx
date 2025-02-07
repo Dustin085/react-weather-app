@@ -152,7 +152,7 @@ function App() {
             console.log(data);
             setWeatherObservationData(data);
 
-            const numOfPreserveHours = 3;
+            const numOfPreserveHours = 1;
             const HOUR_TO_MILLISECOND = 3600000;
             localStorage.setItem(`${reverseCountryNameMapChinese[location]}_weatherObservationData`, JSON.stringify({ weatherObservationData: data, expireTime: new Date(Date.now() + numOfPreserveHours * HOUR_TO_MILLISECOND).toISOString() }));
           });
@@ -265,7 +265,7 @@ function App() {
                   </Form.Select>
                 </div>
                 <div className='flex-grow-1 d-flex flex-column justify-content-center align-items-center'>
-                  <h2 className='hero-title'>{sevenDaysForecastData && Math.floor((Number(sevenDaysForecastData[0].minTemperature) + Number(sevenDaysForecastData[0].maxTemperature)) / 2) + '°C'}</h2>
+                  <h2 className='hero-title'>{weatherObservationData && weatherObservationData.WeatherElement.AirTemperature + '°C'}</h2>
                   <div className='weather-info'>{sevenDaysForecastData && sevenDaysForecastData[0].weather}</div>
                 </div>
               </div>
@@ -297,7 +297,23 @@ function App() {
                     </ul>
                   </Tab>
                   <Tab eventKey="weatherObservation" title="今日綜合">
-                    {weatherObservationData && <div>{'觀測自: ' + weatherObservationData.StationName + '站'}</div>}
+                    {weatherObservationData &&
+                      (
+                          <div className='d-flex flex-column gap-2 justify-content-evenly h-100' style={{width: '80%', margin: '0 auto'}}>
+                            <div>{'觀測自: ' + weatherObservationData.StationName + '站' + `(站號${weatherObservationData.StationId})`}</div>
+                            <div>{'觀測時間: ' + new Date(weatherObservationData.ObsTime.DateTime).toLocaleString(undefined, {
+                              month: 'short',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}</div>
+                            <div>{'相對溼度: ' + weatherObservationData.WeatherElement.RelativeHumidity + '%'}</div>
+                            <div>{'氣溫: ' + weatherObservationData.WeatherElement.AirTemperature + '°C'}</div>
+                            <div>{'氣壓: ' + weatherObservationData.WeatherElement.AirPressure + '百帕'}</div>
+                            <div>{'紫外線指數: ' + weatherObservationData.WeatherElement.UVIndex}</div>
+                          </div>
+                      )
+                    }
                   </Tab>
                 </Tabs>
               </div>
