@@ -133,7 +133,7 @@ function App() {
   return (
     <>
       <div
-        className="root-wrap vh-100"
+        className="root-wrap"
         style={{
           backgroundImage: `url(${bgUrl})`,
           borderRadius: '20px',
