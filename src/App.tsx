@@ -40,8 +40,22 @@ function App() {
   // 初始化
   useEffect(() => {
     if (locationSelectRef.current) setLocation(locationSelectRef.current.value);
-    const preLoadImg = new Image();
-    preLoadImg.src = defaultBg;
+
+    // 預載背景圖片
+    function preLoadImg(src: string) {
+      const preLoadImg = new Image();
+      preLoadImg.src = src;
+    }
+    preLoadImg(defaultBg);
+
+    // css變數設定vh
+    function setViewportHeight() {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    window.addEventListener('resize', setViewportHeight);
+    setViewportHeight();
+    return () => { window.removeEventListener('resize', setViewportHeight); };
   }, []);
 
   // 設定背景圖片，包含預載圖片
@@ -147,23 +161,12 @@ function App() {
           <Row style={{ height: '33%' }}>
             <Col className='col-12 p-3' >
               <div className="today-weather-wrap h-100 d-flex flex-column">
-                {/* <Dropdown className='w-100 my-3'>
-                  <Dropdown.Toggle className='mx-auto d-flex justify-content-between align-items-center' variant='custom-dropdown' size='sm' style={{ width: '80%' }}>
-                    <span className='d-flex justify-content-between align-items-center'>
-                      <img className='me-2' src={pinThin} alt="" style={{ height: '20px', width: '20px' }} />
-                      <span>新北市</span>
-                    </span>
-                  </Dropdown.Toggle> */}
                 <div className="select-wrap my-3 mx-auto" style={{ width: '80%' }}>
                   <img src={pinThin} alt="" className="icon" />
                   <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} defaultValue={"高雄市"}>
                     {countryNames.map(cuntry => <option key={cuntry} value={cuntry}>{cuntry}</option>)}
-                    {/* <option value="臺北市">臺北市</option>
-                    <option value="新北市">新北市</option>
-                    <option value="高雄市">高雄市</option> */}
                   </Form.Select>
                 </div>
-                {/* </Dropdown> */}
                 <div className='flex-grow-1 d-flex flex-column justify-content-center align-items-center'>
                   <h2 className='hero-title'>{sevenDaysForecastData && Math.floor((Number(sevenDaysForecastData[0].minTemperature) + Number(sevenDaysForecastData[0].maxTemperature)) / 2) + '°C'}</h2>
                   <div className='weather-info'>{sevenDaysForecastData && sevenDaysForecastData[0].weather}</div>
@@ -197,7 +200,7 @@ function App() {
                     </ul>
                   </Tab>
                   <Tab eventKey="14days" title="今日綜合">
-                    Tab content for Profile
+                    製作中...
                   </Tab>
                 </Tabs>
               </div>
