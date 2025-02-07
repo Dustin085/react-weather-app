@@ -165,7 +165,7 @@ function App() {
     // 取得七日天氣預報資料，local或API
     function fetchSevenDaysForecastData(location: string) {
       // 檢查localstorage是否有資料，且是否過期
-      const localSevenDaysForecastData = localStorage.getItem(`${location}sevenDaysForecastData`);
+      const localSevenDaysForecastData = localStorage.getItem(`${reverseCountryNameMapChinese[location]}_sevenDaysForecastData`);
       if (localSevenDaysForecastData) {
         try {
           const localDataJson = JSON.parse(localSevenDaysForecastData) as { dayWeatherData: DayWeatherData[], expireTime: string };
@@ -222,7 +222,7 @@ function App() {
               dayWeatherData: dayWeatherData,
               expireTime: data[0].Time[0].EndTime,
             };
-            localStorage.setItem(`${location}sevenDaysForecastData`, JSON.stringify(localDayWeatherData));
+            localStorage.setItem(`${reverseCountryNameMapChinese[location]}_sevenDaysForecastData`, JSON.stringify(localDayWeatherData));
 
           });
       } catch (error) {

@@ -30,7 +30,7 @@
   - [x] 存入localStorage並記錄時間(expireTime)
   - [x] 時間過期才重新fetch
 - [ ] 考慮設計地區選擇排序邏輯
-- [ ] 修改localStorage裡面key的名稱，都改成使用英文地名(countryName.ts 裡面 **enum** 使用的名稱)
+- [x] 修改localStorage裡面key的名稱，都改成使用英文地名(countryName.ts 裡面 **enum** 使用的名稱)
 - [ ] 綜合天氣觀測排版美化
 
 ## 常用連結
