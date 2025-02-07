@@ -22,14 +22,16 @@
 - [x] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
   - [x] 考慮使用當日綜合天氣觀測報告(**O-A0003-001**)
   - [x] 重寫countryNames.ts的邏輯以讓氣象觀測站站號可以被查找
-- [ ] 當天綜合天氣觀測報告
+- [x] 當天綜合天氣觀測報告
   - [x] 取得當天綜合天氣觀測
-  - [ ] 呈現資料
+  - [x] 呈現資料
 - [ ] params query用來做初始化邏輯的參數?
 - [x] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
   - [x] 存入localStorage並記錄時間(expireTime)
   - [x] 時間過期才重新fetch
 - [ ] 考慮設計地區選擇排序邏輯
+- [ ] 修改localStorage裡面key的名稱，都改成使用英文地名(countryName.ts 裡面 **enum** 使用的名稱)
+- [ ] 綜合天氣觀測排版美化
 
 ## 常用連結
 ### [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
