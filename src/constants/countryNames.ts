@@ -1,28 +1,3 @@
-// export const countryNames = [
-//     '高雄市',
-//     '新北市',
-//     '臺北市',
-//     '基隆市',
-//     '宜蘭縣',
-//     '臺中市',
-//     '臺南市',
-//     '桃園市',
-//     '新竹縣',
-//     '新竹市',
-//     '苗栗縣',
-//     '南投縣',
-//     '彰化縣',
-//     '雲林縣',
-//     '嘉義縣',
-//     '嘉義市',
-//     '屏東縣',
-//     '臺東縣',
-//     '花蓮縣',
-//     '金門縣',
-//     '澎湖縣',
-//     '連江縣',
-// ];
-
 // 全台縣市英文名稱(enum)
 enum CountryNamesEnum {
     Kaohsiung_City = 'Kaohsiung_City',
@@ -82,8 +57,6 @@ export const reverseCountryNameMapChinese = Object.entries(countryNameMapChinese
     return acc;
 }, {} as Record<string, keyof typeof countryNameMapChinese>);
 
-// console.log(reverseCountryNameMapChinese['高雄市']);
-
 // 各縣市的氣象觀測站代號，代號清單在README.md
 export const countryNameToObservationStationId = {
     [CountryNamesEnum.Kaohsiung_City]: '467441',
@@ -131,3 +104,28 @@ export const countryNameToObservationStationId = {
 // countryNamesArray[CountryNamesEnum.Kaohsiung_City] = '高雄市';
 // countryNamesArray[CountryNamesEnum.NewTaipei_City] = '新北市';
 // console.log(countryNamesArray);
+
+// export const countryNames = [
+//     '高雄市',
+//     '新北市',
+//     '臺北市',
+//     '基隆市',
+//     '宜蘭縣',
+//     '臺中市',
+//     '臺南市',
+//     '桃園市',
+//     '新竹縣',
+//     '新竹市',
+//     '苗栗縣',
+//     '南投縣',
+//     '彰化縣',
+//     '雲林縣',
+//     '嘉義縣',
+//     '嘉義市',
+//     '屏東縣',
+//     '臺東縣',
+//     '花蓮縣',
+//     '金門縣',
+//     '澎湖縣',
+//     '連江縣',
+// ];

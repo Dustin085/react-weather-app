@@ -5,6 +5,9 @@ import './App.scss'
 import { useEffect, useRef, useState } from 'react';
 import { getWeatherBgUrlByCode, getWeatherIconUrlBycode } from './services/weatherMappingService';
 import { countryNamesChinese as countryNames, countryNameToObservationStationId, reverseCountryNameMapChinese } from './constants/countryNames';
+import { logger } from './utils/logger';
+import { ToastContainer } from 'react-toastify';
+import { handleError } from './utils/errorHandler';
 
 interface WeatherElement<ElementName extends "最高溫度" | "最低溫度" | "天氣現象"> {
   ElementName: ElementName,
@@ -94,6 +97,12 @@ function App() {
     }
     preLoadImg(defaultBg);
 
+    // test logger
+    logger('logger test');
+
+    // test error handler
+    handleError(new Error('error handler test'));
+
     // css變數設定vh
     function setViewportHeight() {
       const vh = window.innerHeight * 0.01;
@@ -132,24 +141,24 @@ function App() {
           const localDataJson = JSON.parse(localWeatherObservationData) as { weatherObservationData: WeatherObservationData, expireTime: string };
           if (localDataJson.weatherObservationData && localDataJson.expireTime) {
             if (new Date(localDataJson.expireTime).getTime() > new Date().getTime()) {
-              console.log('WeatherObservationData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
+              logger('WeatherObservationData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
               setWeatherObservationData(localDataJson.weatherObservationData);
               return;
             }
           }
         } catch (error) {
-          console.log(error);
+          handleError(error);
         }
       }
       // 使用氣象局api取得當前地點的天氣觀測資料
-      console.log(`fetching ${location} today weather observation data`);
+      logger(`fetching ${location} today weather observation data`);
       try {
         fetch(API_KEY + API_ROUTE.weatherObservation + '?' + 'Authorization=' + API_AUTH + '&StationId=' + countryNameToObservationStationId[reverseCountryNameMapChinese[location]])
           .then(res => res.json())
           .then(result => {
             if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
             const data = result.records.Station[0] as WeatherObservationData;
-            console.log(data);
+            logger(data);
             setWeatherObservationData(data);
 
             const numOfPreserveHours = 1;
@@ -158,7 +167,7 @@ function App() {
           });
 
       } catch (error) {
-        console.log(error);
+        handleError(error);
       }
     }
 
@@ -171,7 +180,7 @@ function App() {
           const localDataJson = JSON.parse(localSevenDaysForecastData) as { dayWeatherData: DayWeatherData[], expireTime: string };
           if (localDataJson.dayWeatherData.length > 0 && localDataJson.expireTime) {
             if (new Date(localDataJson.expireTime).getTime() > new Date().getTime()) {
-              console.log('sevenDaysForecastData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
+              logger('sevenDaysForecastData local資料有效期限: ' + new Date(localDataJson.expireTime).toLocaleString());
               setSevenDaysForecastData(localDataJson.dayWeatherData.map((ele) => {
                 return { ...ele, date: new Date(ele.date) };
               }));
@@ -179,12 +188,12 @@ function App() {
             }
           }
         } catch (error) {
-          console.log(error);
+          handleError(error);
         }
       };
 
       // 使用氣象局api取得七日天氣預報
-      console.log(`fetching ${location} 7 days forecast data`);
+      logger(`fetching ${location} 7 days forecast data`);
       try {
         fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
           .then(res => res.json())
@@ -226,7 +235,7 @@ function App() {
 
           });
       } catch (error) {
-        console.log(error);
+        handleError(error);
       }
     }
 
@@ -234,11 +243,11 @@ function App() {
   }, [API_AUTH, API_KEY, API_ROUTE.oneWeekPerTwelveHrs, API_ROUTE.weatherObservation, location]);
 
   useEffect(() => {
-    console.log('7 days forecast data:', sevenDaysForecastData);
+    logger('7 days forecast data:', sevenDaysForecastData);
   }, [sevenDaysForecastData]);
 
   useEffect(() => {
-    console.log('weather observation data:', weatherObservationData);
+    logger('weather observation data:', weatherObservationData);
   }, [weatherObservationData]);
 
   return (
@@ -299,19 +308,19 @@ function App() {
                   <Tab eventKey="weatherObservation" title="今日綜合">
                     {weatherObservationData &&
                       (
-                          <div className='d-flex flex-column gap-2 justify-content-evenly h-100' style={{width: '80%', margin: '0 auto'}}>
-                            <div>{'觀測自: ' + weatherObservationData.StationName + '站' + `(站號${weatherObservationData.StationId})`}</div>
-                            <div>{'觀測時間: ' + new Date(weatherObservationData.ObsTime.DateTime).toLocaleString(undefined, {
-                              month: 'short',
-                              day: '2-digit',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}</div>
-                            <div>{'相對溼度: ' + weatherObservationData.WeatherElement.RelativeHumidity + '%'}</div>
-                            <div>{'氣溫: ' + weatherObservationData.WeatherElement.AirTemperature + '°C'}</div>
-                            <div>{'氣壓: ' + weatherObservationData.WeatherElement.AirPressure + '百帕'}</div>
-                            <div>{'紫外線指數: ' + weatherObservationData.WeatherElement.UVIndex}</div>
-                          </div>
+                        <div className='d-flex flex-column gap-2 justify-content-evenly h-100' style={{ width: '80%', margin: '0 auto' }}>
+                          <div>{'觀測自: ' + weatherObservationData.StationName + '站' + `(站號${weatherObservationData.StationId})`}</div>
+                          <div>{'觀測時間: ' + new Date(weatherObservationData.ObsTime.DateTime).toLocaleString(undefined, {
+                            month: 'short',
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}</div>
+                          <div>{'相對溼度: ' + weatherObservationData.WeatherElement.RelativeHumidity + '%'}</div>
+                          <div>{'氣溫: ' + weatherObservationData.WeatherElement.AirTemperature + '°C'}</div>
+                          <div>{'氣壓: ' + weatherObservationData.WeatherElement.AirPressure + '百帕'}</div>
+                          <div>{'紫外線指數: ' + weatherObservationData.WeatherElement.UVIndex}</div>
+                        </div>
                       )
                     }
                   </Tab>
@@ -320,6 +329,7 @@ function App() {
             </Col>
           </Row>
         </Container>
+        <ToastContainer position='bottom-center' />
       </div >
     </>
   )
