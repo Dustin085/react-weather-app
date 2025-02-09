@@ -16,7 +16,7 @@
 - [x] review fetch預報資料的程式碼
   - [x] review結果：可以改寫成先將data裡面三個array合併在一起然後再進行處理，但前提是必須保證三個array的Time是一樣的，推測，可以稍微提升效率，但目前優先度低
 - [x] 解決背景圖片載入過慢
-  - [ ] 設計背景圖片的transition，backgroundImage沒辦法直接套用transition，需要設計一個轉場
+  - [ ] 設計背景圖片的transition，backgroundImage沒辦法直接套用transition，需要設計一個轉場。目前觀察下來，在某些瀏覽器中bgImg是可以使用transition的(google, edge)
 - [x] 將桌面板也限制在手機大小
 - [x] 修正高度過高時tab content位置問題，justify-content: safe center好用
 - [x] 找一些其他可放入tabs的項目，因為預報最遠就到七天後
@@ -25,12 +25,14 @@
 - [x] 當天綜合天氣觀測報告
   - [x] 取得當天綜合天氣觀測
   - [x] 呈現資料
-- [ ] params query用來做初始化邏輯的參數?
+- [ ] params query用來做初始化邏輯的參數? **否決**，改成使用local儲存最後查詢的location
+  - [ ] local儲存最後查詢的location
 - [x] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
   - [x] 存入localStorage並記錄時間(expireTime)
   - [x] 時間過期才重新fetch
 - [ ] 考慮設計地區選擇排序邏輯
 - [x] 修改localStorage裡面key的名稱，都改成使用英文地名(countryName.ts 裡面 **enum** 使用的名稱)
+- [ ] 利用環境變數將大部分console.log改成只在開發環境下執行
 - [ ] 綜合天氣觀測排版美化
 
 ## 常用連結
