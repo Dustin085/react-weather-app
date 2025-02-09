@@ -128,10 +128,13 @@ function App() {
     const promiseForWeatherObservationData = fetchWeatherObservationData(location);
 
     // 依照有無promise來處理toastify(無promise代表local有尚未過期的暫存資料)
+
+    // 因為大部分使用者不會了解暫存的意思，可能會有所誤會，故須再考慮是否執行此通知
     // if (!promiseForSevenDaysForecastData && !promiseForWeatherObservationData) {
     //   toast.success('已使用本地暫存資料', { autoClose: 1500 });
     //   return;
     // };
+    
     let promises: Promise<unknown> | undefined = undefined;
     if (promiseForSevenDaysForecastData && promiseForWeatherObservationData) {
       promises = Promise.all([promiseForSevenDaysForecastData, promiseForWeatherObservationData]);

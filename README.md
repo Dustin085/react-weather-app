@@ -2,7 +2,7 @@
 
 使用react + vite作為基礎架構，
 
-利用中央氣象局提供的api獲取全台各地的氣象資料並且呈現。
+利用中央氣象署提供的api獲取全台各地的氣象資料並且呈現。
 隨當下天氣改變的背景圖片讓人對於今日陰晴一目了然。
 
 ## TODO
@@ -44,6 +44,9 @@
 ### [氣象代碼](https://www.cwa.gov.tw/V8/assets/pdf/Weather_Icon.pdf)
 ### [氣象站清單](https://e-service.cwa.gov.tw/wdps/obs/state.htm#description)
 ### [Icons](https://fonts.google.com/icons?icon.query=weather&icon.size=24&icon.color=%23e8eaed)
+
+## 待研討事項
+- 因為無法確定大部分使用者對於暫存資料的理解，故目前暫時關閉 **已使用本地暫存資料** 的toastify通知。但若沒此通知，使用者可能會誤以為app沒更新資料，因為app從中央氣象署fetch資料時會顯示**成功取得天氣資料**。
 
 ## React + TypeScript + Vite
 
