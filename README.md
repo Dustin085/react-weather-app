@@ -25,8 +25,8 @@
 - [x] 當天綜合天氣觀測報告
   - [x] 取得當天綜合天氣觀測
   - [x] 呈現資料
-- [ ] params query用來做初始化邏輯的參數? **否決**，改成使用local儲存最後查詢的location
-  - [ ] local儲存最後查詢的location
+- [x] params query用來做初始化邏輯的參數? **否決**，改成使用local儲存最後查詢的location
+  - [x] local儲存最後查詢的location
 - [x] 改寫取得氣象資料的邏輯，讓觀測資料可以不用每次切換地點就重新fetch
   - [x] 存入localStorage並記錄時間(expireTime)
   - [x] 時間過期才重新fetch

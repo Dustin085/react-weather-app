@@ -71,7 +71,8 @@ function App() {
   };
 
   // 使用者選擇的地點，依此取得氣象資料
-  const [location, setLocation] = useState<string | null>(null);
+  const localStorageLocation = localStorage.getItem('locationSelected');
+  const [location, setLocation] = useState<string>(localStorageLocation || countryNames[0]);
 
   // 七日天氣預報資料
   const [sevenDaysForecastData, setSevenDaysForecastData] = useState<DayWeatherData[] | null>(null);
@@ -82,7 +83,10 @@ function App() {
   const [bgUrl, setBgUrl] = useState(defaultBg);
 
   // 使用者選擇地點時的事件處理
-  const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => { setLocation(ev.target.value); };
+  const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+    localStorage.setItem('locationSelected', ev.target.value);
+    setLocation(ev.target.value);
+  };
 
   // 地點選擇的ref，初始化使用
   const locationSelectRef = useRef<HTMLSelectElement>(null);
@@ -134,7 +138,7 @@ function App() {
     //   toast.success('已使用本地暫存資料', { autoClose: 1500 });
     //   return;
     // };
-    
+
     let promises: Promise<unknown> | undefined = undefined;
     if (promiseForSevenDaysForecastData && promiseForWeatherObservationData) {
       promises = Promise.all([promiseForSevenDaysForecastData, promiseForWeatherObservationData]);
@@ -297,7 +301,7 @@ function App() {
               <div className="today-weather-wrap h-100 d-flex flex-column">
                 <div className="select-wrap my-3 mx-auto" style={{ width: '80%' }}>
                   <img src={pinThin} alt="" className="icon" />
-                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} defaultValue={"高雄市"}>
+                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} value={location}>
                     {countryNames.map(cuntry => <option key={cuntry} value={cuntry}>{cuntry}</option>)}
                   </Form.Select>
                 </div>
