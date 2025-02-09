@@ -32,7 +32,8 @@
   - [x] 時間過期才重新fetch
 - [ ] 考慮設計地區選擇排序邏輯
 - [x] 修改localStorage裡面key的名稱，都改成使用英文地名(countryName.ts 裡面 **enum** 使用的名稱)
-- [ ] 利用環境變數將大部分console.log改成只在開發環境下執行
+- [x] 利用環境變數將大部分console.log改成只在開發環境下執行
+- [x] 利用Toastify通知Promise的進行
 - [ ] 綜合天氣觀測排版美化
 
 ## 常用連結

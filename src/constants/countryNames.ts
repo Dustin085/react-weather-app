@@ -1,4 +1,6 @@
-// 全台縣市英文名稱(enum)
+/**
+ * 全台縣市英文名稱(enum)
+ */
 enum CountryNamesEnum {
     Kaohsiung_City = 'Kaohsiung_City',
     NewTaipei_City = 'NewTaipei_City',
@@ -24,7 +26,9 @@ enum CountryNamesEnum {
     Lienchiang_County = 'Lienchiang_County',
 }
 
-// 全台縣市中文名稱
+/**
+ * 全台縣市中文名稱 (對應到CountryNamesEnum)
+ */
 const countryNameMapChinese = {
     [CountryNamesEnum.Kaohsiung_City]: '高雄市',
     [CountryNamesEnum.NewTaipei_City]: '新北市',
@@ -50,14 +54,22 @@ const countryNameMapChinese = {
     [CountryNamesEnum.Lienchiang_County]: '連江縣',
 }
 
+/**
+ * 全台縣市中文名稱清單
+ */
 export const countryNamesChinese = Object.values(countryNameMapChinese);
 
+/**
+ * 全台縣市中文名稱對應的英文名稱 (對應到CountryNamesEnum)
+ */
 export const reverseCountryNameMapChinese = Object.entries(countryNameMapChinese).reduce((acc, [key, value]) => {
     acc[value] = key as keyof typeof countryNameMapChinese;
     return acc;
 }, {} as Record<string, keyof typeof countryNameMapChinese>);
 
-// 各縣市的氣象觀測站代號，代號清單在README.md
+/**
+ * 各縣市的氣象觀測站代號，代號清單在README.md中 
+ * */
 export const countryNameToObservationStationId = {
     [CountryNamesEnum.Kaohsiung_City]: '467441',
     [CountryNamesEnum.NewTaipei_City]: '466881',

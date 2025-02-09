@@ -8,6 +8,7 @@ import { countryNamesChinese as countryNames, countryNameToObservationStationId,
 import { logger } from './utils/logger';
 import { ToastContainer } from 'react-toastify';
 import { handleError } from './utils/errorHandler';
+import { hanlePromiseToastify } from './utils/toastify';
 
 interface WeatherElement<ElementName extends "最高溫度" | "最低溫度" | "天氣現象"> {
   ElementName: ElementName,
@@ -97,12 +98,6 @@ function App() {
     }
     preLoadImg(defaultBg);
 
-    // test logger
-    logger('logger test');
-
-    // test error handler
-    handleError(new Error('error handler test'));
-
     // css變數設定vh
     function setViewportHeight() {
       const vh = window.innerHeight * 0.01;
@@ -129,10 +124,31 @@ function App() {
     if (!location) { return };
 
     // 取得兩種天氣資料
-    fetchSevenDaysForecastData(location);
-    fetchWeatherObservationData(location);
+    const promiseForSevenDaysForecastData = fetchSevenDaysForecastData(location);
+    const promiseForWeatherObservationData = fetchWeatherObservationData(location);
 
-    // 取得當前地點的天氣觀測資料，local或API
+    // 依照有無promise來處理toastify(無promise代表local有尚未過期的暫存資料)
+    // if (!promiseForSevenDaysForecastData && !promiseForWeatherObservationData) {
+    //   toast.success('已使用本地暫存資料', { autoClose: 1500 });
+    //   return;
+    // };
+    let promises: Promise<unknown> | undefined = undefined;
+    if (promiseForSevenDaysForecastData && promiseForWeatherObservationData) {
+      promises = Promise.all([promiseForSevenDaysForecastData, promiseForWeatherObservationData]);
+    } else {
+      promises = promiseForSevenDaysForecastData || promiseForWeatherObservationData;
+    }
+    if (!promises) return;
+    hanlePromiseToastify(promises, {
+      pending: '更新天氣資料中...',
+      success: '成功更新天氣資料',
+    });
+
+    /**
+     *  取得當前地點的天氣觀測資料，localStorage 或 中央氣象署API
+     * @param location - 地點
+     * @returns API取得資料的promise | undefined
+     */
     function fetchWeatherObservationData(location: string) {
       // 檢查localstorage是否有資料，且是否過期
       const localWeatherObservationData = localStorage.getItem(`${reverseCountryNameMapChinese[location]}_weatherObservationData`);
@@ -152,8 +168,9 @@ function App() {
       }
       // 使用氣象局api取得當前地點的天氣觀測資料
       logger(`fetching ${location} today weather observation data`);
+      let promiseForWeatherObservationData: Promise<unknown> | undefined = undefined;
       try {
-        fetch(API_KEY + API_ROUTE.weatherObservation + '?' + 'Authorization=' + API_AUTH + '&StationId=' + countryNameToObservationStationId[reverseCountryNameMapChinese[location]])
+        promiseForWeatherObservationData = fetch(API_KEY + API_ROUTE.weatherObservation + '?' + 'Authorization=' + API_AUTH + '&StationId=' + countryNameToObservationStationId[reverseCountryNameMapChinese[location]])
           .then(res => res.json())
           .then(result => {
             if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
@@ -169,9 +186,14 @@ function App() {
       } catch (error) {
         handleError(error);
       }
+      return promiseForWeatherObservationData;
     }
 
-    // 取得七日天氣預報資料，local或API
+    /**
+     * 取得七日天氣預報資料，localStorage 或 中央氣象署API
+     * @param location - 地點
+     * @returns API取得資料的promise | undefined
+     */
     function fetchSevenDaysForecastData(location: string) {
       // 檢查localstorage是否有資料，且是否過期
       const localSevenDaysForecastData = localStorage.getItem(`${reverseCountryNameMapChinese[location]}_sevenDaysForecastData`);
@@ -194,8 +216,9 @@ function App() {
 
       // 使用氣象局api取得七日天氣預報
       logger(`fetching ${location} 7 days forecast data`);
+      let promiseForSevenDaysForecastData: Promise<unknown> | undefined = undefined;
       try {
-        fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
+        promiseForSevenDaysForecastData = fetch(API_KEY + API_ROUTE.oneWeekPerTwelveHrs + '?' + 'Authorization=' + API_AUTH + '&LocationName=' + location + '&ElementName=天氣現象,最低溫度,最高溫度')
           .then(res => res.json())
           .then(result => {
             if (!result.success) { throw Error('成功取得預報資料，但預報資料被標註為未完成'); };
@@ -237,6 +260,8 @@ function App() {
       } catch (error) {
         handleError(error);
       }
+
+      return promiseForSevenDaysForecastData;
     }
 
 
