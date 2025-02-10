@@ -4,7 +4,7 @@ import defaultBg from './assets/images/default-bg001.webp'
 import './App.scss'
 import { useEffect, useRef, useState } from 'react';
 import { getWeatherBgUrlByCode, getWeatherIconUrlBycode } from './services/weatherMappingService';
-import { countryNamesChinese as countryNames, countryNameToObservationStationId, reverseCountryNameMapChinese } from './constants/countryNames';
+import { countryNameMapChinese, countryNamesChinese as countryNames, countryNameToObservationStationId, isCountryNameValid, reverseCountryNameMapChinese } from './constants/countryNames';
 import { logger } from './utils/logger';
 import { ToastContainer } from 'react-toastify';
 import { handleError } from './utils/errorHandler';
@@ -71,8 +71,14 @@ function App() {
   };
 
   // 使用者選擇的地點，依此取得氣象資料
-  const localStorageLocation = localStorage.getItem('locationSelected');
-  const [location, setLocation] = useState<string>(localStorageLocation || countryNames[0]);
+  const [location, setLocation] = useState<string>(() => {
+    const localStorageLocation = localStorage.getItem('locationSelected');
+    if(!localStorageLocation) return countryNames[0];
+
+    if (localStorageLocation && isCountryNameValid(localStorageLocation)) return countryNameMapChinese[localStorageLocation];
+
+    return countryNames[0];
+  });
 
   // 七日天氣預報資料
   const [sevenDaysForecastData, setSevenDaysForecastData] = useState<DayWeatherData[] | null>(null);
@@ -84,7 +90,7 @@ function App() {
 
   // 使用者選擇地點時的事件處理
   const handleLocationChange = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    localStorage.setItem('locationSelected', ev.target.value);
+    localStorage.setItem('locationSelected', reverseCountryNameMapChinese[ev.target.value]);
     setLocation(ev.target.value);
   };
 

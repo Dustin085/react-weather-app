@@ -29,7 +29,7 @@ enum CountryNamesEnum {
 /**
  * 全台縣市中文名稱 (對應到CountryNamesEnum)
  */
-const countryNameMapChinese = {
+export const countryNameMapChinese = {
     [CountryNamesEnum.Kaohsiung_City]: '高雄市',
     [CountryNamesEnum.NewTaipei_City]: '新北市',
     [CountryNamesEnum.Taipei_City]: '臺北市',
@@ -93,6 +93,10 @@ export const countryNameToObservationStationId = {
     [CountryNamesEnum.Kinmen_County]: '467110',
     [CountryNamesEnum.Penghu_County]: '467350',
     [CountryNamesEnum.Lienchiang_County]: '467990',
+};
+
+export function isCountryNameValid(countryName: string): countryName is CountryNamesEnum {
+    return (Object.values(CountryNamesEnum) as string[]).includes(countryName);
 };
 
 // console.log(`高雄市觀測站的站號是: ${countryNameToObservationStationId[reverseCountryNameMapChinese['高雄市']]}`);
