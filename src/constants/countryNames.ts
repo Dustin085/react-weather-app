@@ -1,7 +1,7 @@
 /**
  * 全台縣市英文名稱(enum)
  */
-enum CountryNamesEnum {
+export enum CountryNamesEnum {
     Kaohsiung_City = 'Kaohsiung_City',
     NewTaipei_City = 'NewTaipei_City',
     Taipei_City = 'Taipei_City',

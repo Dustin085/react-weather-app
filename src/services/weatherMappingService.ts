@@ -7,16 +7,36 @@ import thunderStormIcon from '../assets/images/weather-icon/thunder-storm001.svg
 import fogIcon from '../assets/images/weather-icon/foggy001.svg';
 import snowIcon from '../assets/images/weather-icon/snowy001.svg';
 // background import
-import clearBg001 from '../assets/images/weather/clear001.jpg';
-import clearBg002 from '../assets/images/weather/clear002.jpg';
-import rainyBg001 from '../assets/images/weather/rainy001.jpg';
-import rainyBg002 from '../assets/images/weather/rainy002.jpg';
-import cloudyBg001 from '../assets/images/weather/cloudy001.jpg';
-import cloudyBg002 from '../assets/images/weather/cloudy002.jpg';
-import cloudyBg003 from '../assets/images/weather/cloudy003.jpg';
-import thunderBg001 from '../assets/images/weather/thunder001.jpg';
-import fogBg001 from '../assets/images/weather/fog001.jpg';
-import snowBg001 from '../assets/images/weather/snow.jpg';
+// import clearBg001 from '../assets/images/weather/clear001.jpg';
+// import clearBg002 from '../assets/images/weather/clear002.jpg';
+// import rainyBg001 from '../assets/images/weather/rainy001.jpg';
+// import rainyBg002 from '../assets/images/weather/rainy002.jpg';
+// import cloudyBg001 from '../assets/images/weather/cloudy001.jpg';
+// import cloudyBg002 from '../assets/images/weather/cloudy002.jpg';
+// import cloudyBg003 from '../assets/images/weather/cloudy003.jpg';
+// import thunderBg001 from '../assets/images/weather/thunder001.jpg';
+// import fogBg001 from '../assets/images/weather/fog001.jpg';
+// import snowBg001 from '../assets/images/weather/snow.jpg';
+
+export enum BackgroundImagesCategories {
+    clear = 'clear',
+    rainy = 'rainy',
+    cloudy = 'cloudy',
+    thunder = 'thunder',
+    fog = 'fog',
+    snow = 'snow',
+};
+
+const backgroundImages = import.meta.glob('../assets/images/weather/*.jpg', {eager: true});
+export const filteredBackgroundImages = Object.keys(backgroundImages).reduce((acc, key) => {
+    const category = Object.values(BackgroundImagesCategories).find(category => key.includes(category));
+
+    if (!category) return acc;
+    // 相對路徑轉換為絕對 URL
+    const resolvedKey = new URL((backgroundImages[key] as { default: string }).default, import.meta.url).href;
+    acc[category] = acc[category] ? [...acc[category], resolvedKey] : [resolvedKey];
+    return acc;
+}, {} as Record<BackgroundImagesCategories, string[]>);
 
 export enum WeatherType {
     notFound = 0,
@@ -73,18 +93,18 @@ const typeToWeatherIconUrl = new Map<WeatherType, string>([
 
 const typeToWeatherBgUrl = new Map<WeatherType, string[]>([
     [WeatherType.notFound, [errorImg]],
-    [WeatherType.clear, [clearBg001, clearBg002]],
-    [WeatherType.mostlyClear, [clearBg001, clearBg002]],
-    [WeatherType.partlyClear, [clearBg001, clearBg002]],
-    [WeatherType.partlyCloudy, [cloudyBg001, cloudyBg002, cloudyBg003]],
-    [WeatherType.cloudy, [cloudyBg001, cloudyBg002, cloudyBg003]],
-    [WeatherType.occasionalRainy, [rainyBg001, rainyBg002]],
-    [WeatherType.rainy, [rainyBg001, rainyBg002]],
-    [WeatherType.thunderShower, [thunderBg001]],
-    [WeatherType.thunderStorm, [thunderBg001]],
-    [WeatherType.snow, [snowBg001]],
-    [WeatherType.fog, [fogBg001]],
-    [WeatherType.localRain, [rainyBg001, rainyBg002]],
+    [WeatherType.clear, filteredBackgroundImages.clear],
+    [WeatherType.mostlyClear, filteredBackgroundImages.clear],
+    [WeatherType.partlyClear, filteredBackgroundImages.clear],
+    [WeatherType.partlyCloudy, filteredBackgroundImages.cloudy],
+    [WeatherType.cloudy, filteredBackgroundImages.cloudy],
+    [WeatherType.occasionalRainy, filteredBackgroundImages.rainy],
+    [WeatherType.rainy, filteredBackgroundImages.rainy],
+    [WeatherType.thunderShower, filteredBackgroundImages.thunder],
+    [WeatherType.thunderStorm, filteredBackgroundImages.thunder],
+    [WeatherType.snow, filteredBackgroundImages.snow],
+    [WeatherType.fog, filteredBackgroundImages.fog],
+    [WeatherType.localRain, filteredBackgroundImages.rainy],
 ]);
 
 export function getWeatherIconUrlBycode(code: number): string {
