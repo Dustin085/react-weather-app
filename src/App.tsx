@@ -75,7 +75,8 @@ function App() {
     const localStorageLocation = localStorage.getItem('locationSelected');
     if(!localStorageLocation) return countryNames[0];
 
-    if (localStorageLocation && isCountryNameValid(localStorageLocation)) return countryNameMapChinese[localStorageLocation];
+    // 如果localStorageLocation是合法的地點名稱，則使用localStorage內的地點名稱
+    if (isCountryNameValid(localStorageLocation)) return countryNameMapChinese[localStorageLocation];
 
     return countryNames[0];
   });

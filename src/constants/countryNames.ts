@@ -95,6 +95,11 @@ export const countryNameToObservationStationId = {
     [CountryNamesEnum.Lienchiang_County]: '467990',
 };
 
+/**
+ * 檢查一個字串是否被包含在CountryNamesEnum中
+ * @param countryName - 想要檢查的縣市名稱
+ * @returns 是否為合法的縣市名稱
+ */
 export function isCountryNameValid(countryName: string): countryName is CountryNamesEnum {
     return (Object.values(CountryNamesEnum) as string[]).includes(countryName);
 };
