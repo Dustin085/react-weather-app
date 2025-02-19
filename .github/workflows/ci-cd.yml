@@ -1,0 +1,31 @@
+name: React CI/CD
+
+on:
+  push:
+    branches: [main] # 當推送到 main 分支時觸發
+  pull_request:
+    branches: [main] # PR 時也觸發檢查
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # 在 Ubuntu 環境執行
+    steps:
+      - name: 取得程式碼
+        uses: actions/checkout@v3
+
+      - name: 設定 Node.js 環境
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.17.0 # 確保版本與你的專案一致
+
+      - name: 安裝依賴
+        run: npm install
+
+      - name: 執行測試
+        run: npm test
+
+      - name: 建置專案
+        run: npm run build
