@@ -7,7 +7,7 @@ on:
     branches: [main] # PR 時也觸發檢查
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
