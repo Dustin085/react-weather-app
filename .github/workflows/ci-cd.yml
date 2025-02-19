@@ -29,3 +29,6 @@ jobs:
 
       - name: 建置專案
         run: npm run build
+
+      - name: 部署到 GitHub Pages
+        run: npm run deploy
