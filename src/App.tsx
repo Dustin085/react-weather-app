@@ -110,13 +110,13 @@ function App() {
     preLoadImg(defaultBg);
 
     // css變數設定vh
-    function setViewportHeight() {
-      const vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    window.addEventListener('resize', setViewportHeight);
-    setViewportHeight();
-    return () => { window.removeEventListener('resize', setViewportHeight); };
+    // function setViewportHeight() {
+    //   const vh = window.innerHeight * 0.01;
+    //   document.documentElement.style.setProperty('--vh', `${vh}px`);
+    // }
+    // window.addEventListener('resize', setViewportHeight);
+    // setViewportHeight();
+    // return () => { window.removeEventListener('resize', setViewportHeight); };
   }, []);
 
   // 設定背景圖片，包含預載圖片
