@@ -73,7 +73,7 @@ function App() {
   // 使用者選擇的地點，依此取得氣象資料
   const [location, setLocation] = useState<string>(() => {
     const localStorageLocation = localStorage.getItem('locationSelected');
-    if(!localStorageLocation) return countryNames[0];
+    if (!localStorageLocation) return countryNames[0];
 
     // 如果localStorageLocation是合法的地點名稱，則使用localStorage內的地點名稱
     if (isCountryNameValid(localStorageLocation)) return countryNameMapChinese[localStorageLocation];

@@ -35,6 +35,9 @@
 - [x] 利用環境變數將大部分console.log改成只在開發環境下執行
 - [x] 利用Toastify通知Promise的進行
 - [ ] 綜合天氣觀測排版美化
+- [ ] vitest
+  - [x] 非元件函數測試
+  - [ ] 元件測試
 
 ## 常用連結
 ### [API測試](https://opendata.cwa.gov.tw/dist/opendata-swagger.html)
