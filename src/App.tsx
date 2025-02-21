@@ -311,7 +311,7 @@ function App() {
               <div className="today-weather-wrap h-100 d-flex flex-column">
                 <div className="select-wrap my-3 mx-auto" style={{ width: '80%' }}>
                   <img src={pinThin} alt="" className="icon" />
-                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} value={location}>
+                  <Form.Select className='w-100' style={{ height: '34px' }} onChange={(ev) => { handleLocationChange(ev) }} ref={locationSelectRef} value={location} role='combobox' aria-label='選擇地區'>
                     {countryNames.map(cuntry => <option key={cuntry} value={cuntry}>{cuntry}</option>)}
                   </Form.Select>
                 </div>
